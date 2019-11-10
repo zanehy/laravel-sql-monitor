@@ -1,0 +1,22 @@
+{
+    "name": "zanehy/sqlmonitor",
+    "description": "laravel moniro sql exec",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "zanehy",
+            "email": "zanehy@foxmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Zanehy\\SqlMonitor\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zanehy\\SqlMonitor\\Tests\\": "tests/"
+        }
+    }
+}
