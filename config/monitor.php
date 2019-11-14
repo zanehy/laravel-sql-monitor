@@ -7,7 +7,8 @@
  */
 
 return [
-
     'app' => env("APP_ENV", ''),
-    'sql-monitor' => env("SQL_MONITOR", false),
+    'debug' => env("APP_DEBUG", false),
+    'sql-monitor' => env("MONITOR", false),
+    'monitor-action' => env("MONITOR_ACTIONS", ""),
 ];

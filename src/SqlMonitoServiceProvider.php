@@ -69,7 +69,30 @@ class SqlMonitorServiceProvider extends ServiceProvider
     public function boot()
     {
 
-        if (($this->app['config']->get('monitor.app') == "local") || $this->app['config']->get('monitor.sql-monitor')) {
+        if (($this->app['config']->get('monitor.app') == "local") || //开启配置APP_ENV配置为local启动
+            $this->app['config']->get('monitor.debug') || //开启debug模式，默认自动启东监听
+            $this->app['config']->get('monitor.sql-monitor')) //开启配置SQL_MONITOR配置为true启动（为不影响APP_ENV和APP_DEBUG配置，单独设置sql监控的开启配置）
+        {
+
+            //获取当前访问的路径地址和要匹配的路由，进行匹配指定的监控路径
+            $urlPath = Request::capture()->path();
+            $monitorActions = $this->app['config']->get('monitor.monitor-action');
+            $monitorActions = array_unique(array_filter(explode("|", $monitorActions)));
+            if (empty($urlPath) || empty($monitorActions)) {
+                return true;
+            }
+
+            //匹配当前的路径是否在配置的路径中
+            $matching = false;
+            foreach ($monitorActions as $monitorAction) {
+                if (strstr(trim($urlPath), trim($monitorAction))) {
+                    $matching = true;
+                    break;
+                }
+            }
+            if (!$matching) {
+                true;
+            }
 
             $db = $this->app['db'];
             $db->listen(
@@ -89,8 +112,6 @@ class SqlMonitorServiceProvider extends ServiceProvider
         }
     }
 
-
-
     /**
      * 监听
      * @auther zhanghy<zhanghongyan@100tal.com>
@@ -99,8 +120,8 @@ class SqlMonitorServiceProvider extends ServiceProvider
      */
     private function sqlMonitor(QueryExecuted $event, array $stacks)
     {
-        $sql = str_replace("?", "'%s'", $event->sql);
-        $sql = vsprintf($sql, $event->bindings);
+//        $sql = str_replace("?", "'%s'", $event->sql);
+//        $sql = vsprintf($sql, $event->bindings);
         $urlPath = Request::capture()->path();
 
         //检索执行的文件和行数
@@ -115,9 +136,9 @@ class SqlMonitorServiceProvider extends ServiceProvider
 
         //记录日志
         Log::info(json_encode([
-            'action' => 'sqlmonitor:'. $urlPath,
-            'path' => $urlPath,
-            'sql' => $sql,
+            'action' => 'sql_monitor_action:'. $urlPath,
+            'sql' => $event->sql,
+            'bindings' => $event->bindings,
             'time' => $event->time . 'ms',
             'file' => ($res['file'] ?? ''),
             'line' => ($res['line'] ?? '')
