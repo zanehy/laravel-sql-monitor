@@ -1,6 +1,6 @@
 {
     "name": "zanehy/laravel-sql-monitor",
-    "description": "laravel moniro sql exec",
+    "description": "SQL monitoring in laravel production environment",
     "license": "MIT",
     "authors": [
         {
