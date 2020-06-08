@@ -112,7 +112,6 @@ class SqlMonitorServiceProvider extends ServiceProvider
         }
     }
 
-
     /**
      * 监听
      * @auther zhanghy<zhanghongyan@100tal.com>
