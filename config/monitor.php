@@ -11,4 +11,5 @@ return [
     'debug' => env("APP_DEBUG", false),
     'sql-monitor' => env("MONITOR", false),
     'monitor-action' => env("MONITOR_ACTIONS", ""),
+
 ];
